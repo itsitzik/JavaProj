@@ -3,7 +3,7 @@ public class Rest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.print("hellow world");
+		System.out.print("Jacob,Zango,Itzik,Test123");
 	}
 
 }
