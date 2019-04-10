@@ -1,0 +1,7 @@
+<?xml version = "1.0"?>
+<Rest>
+	<admin>
+		<id>admin</id>
+		<pass>123456</pass>
+	</admin>
+</Rest>
