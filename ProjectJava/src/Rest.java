@@ -18,6 +18,7 @@ public class Rest {
 	
 	void InitRest() {
 		JFrame gui = new JFrame();
+		gui;
 		
 	}
 
