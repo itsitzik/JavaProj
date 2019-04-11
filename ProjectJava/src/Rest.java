@@ -8,6 +8,7 @@ import java.io.*;
 //MAIN CLASS WHERE main FUNCTION IS
 public class Rest {
 
+<<<<<<< HEAD
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 		File inputFile = new File(".settings/RestSettings.xml");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -18,6 +19,11 @@ public class Rest {
 	
 	void InitRest() {
 		JFrame gui = new JFrame();
+=======
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.print("Jacob,Zango,Itzik,Test123");
+>>>>>>> refs/remotes/origin/master
 	}
 
 }
