@@ -3,23 +3,22 @@ import javax.xml.parsers.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import com.gui.Gui;
+
 import java.io.*;
 
 //MAIN CLASS WHERE main FUNCTION IS
 public class Rest {
 
 
-	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException {
-		File inputFile = new File(".settings/RestSettings.xml");
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(inputFile);
-		System.out.println(doc.getDocumentElement().getNodeName());
+	public static void main(String[] args) {
+		Rest rest = new Rest();
+		rest.InitRest();
 	}
 	
 	void InitRest() {
-		JFrame gui = new JFrame();
-
+		Gui gui = new Gui();
+		
 	}
 
 }
