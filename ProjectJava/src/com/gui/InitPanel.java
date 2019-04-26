@@ -18,7 +18,6 @@ public class InitPanel {
 	
 	InitPanel(Gui gui) {
 		
-
 		AddInitPanel(gui.win);
 		AddInitLabel("Welcome To RestPnM");
 		AddInitButtons(gui);

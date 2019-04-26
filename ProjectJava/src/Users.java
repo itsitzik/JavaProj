@@ -1,4 +1,0 @@
-enum Users {
-	ADMIN,
-	USER
-}
