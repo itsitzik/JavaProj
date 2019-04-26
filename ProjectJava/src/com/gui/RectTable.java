@@ -3,6 +3,8 @@ package com.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import javax.swing.JPanel;
@@ -17,7 +19,7 @@ public class RectTable extends Table {
 	private String tableInfo = "";
 	
 	public RectTable(){
-		super(0,false,new Date(),new Date(),false,0,0);
+		super(0,false, LocalTime.now(),LocalTime.now() ,false,0,0);
 	}
 
 	public void printTable(JPanel win) {
@@ -37,8 +39,8 @@ public class RectTable extends Table {
 		int i = 1;
 		g.drawString("people: " + getPeople(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
 		g.drawString("smoke?: " + isSmoke(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-		g.drawString("start: " + getStartTime().getHours() + ":" + getStartTime().getMinutes(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-		g.drawString("end: " + + getEndTime().getHours() + ":" + getEndTime().getMinutes(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
+		g.drawString("start: " + getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) , getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
+		g.drawString("end: " + getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
 		g.drawString("taken?: " + getTaken(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
 
 	}

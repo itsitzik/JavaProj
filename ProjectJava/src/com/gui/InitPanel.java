@@ -2,6 +2,7 @@ package com.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,10 +25,15 @@ public class InitPanel {
 	}
 
 	private void AddInitPanel(JFrame win) {
+		
+		Graphics g = win.getGraphics();
+		g.clearRect(0, 0, 1000, 200);
+		
 		initPanel = new JPanel(new GridLayout(2, 1));
 		initPanel.setBounds(0, 200, 1000, 200);
 		initPanel.setVisible(true);
 		win.getContentPane().add(initPanel);
+		
 	}
 
 	private void AddInitLabel(String str) {

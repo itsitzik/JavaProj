@@ -1,6 +1,7 @@
 package com.db;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import org.w3c.dom.*;
@@ -17,10 +18,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
+import com.gui.CircleTable;
+import com.gui.RectTable;
 import com.gui.Table;
 
 public class SaveLoad {
+
+	private static final String pre = "com.gui.";
 
 	public static void SaveRest(List<Table> tables) throws TransformerException {
 
@@ -44,7 +50,7 @@ public class SaveLoad {
 				tableClass.appendChild(doc.createTextNode(tables.get(i).getClass().getName()));
 				table.appendChild(tableClass);
 
-				tablePeople = doc.createElement("people");
+				tablePeople = doc.createElement("People");
 				tablePeople.appendChild(doc.createTextNode(tables.get(i).getPeople() + ""));
 				table.appendChild(tablePeople);
 
@@ -82,6 +88,45 @@ public class SaveLoad {
 	}
 
 	public static void LoadRest(List<Table> tables) {
+		tables.removeAll(tables);
+		Table table;
+		System.out.println(tables.size());
+
+		try {
+			File inputFile = new File("./Rest.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(inputFile);
+			doc.getDocumentElement().normalize();
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+			NodeList nList = doc.getElementsByTagName("Table");
+
+			for (int i = 0; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (eElement.getElementsByTagName("Class").item(0).getTextContent().toString()
+							.equals(pre + "RectTable")) {
+						RectTable recTable = new RectTable();
+						table = recTable;
+					} else {
+						CircleTable cirTable = new CircleTable();
+						table = cirTable;
+					}
+					System.out.println(eElement.getElementsByTagName("People").item(0).getTextContent().toString());
+					table.setPeople(eElement.getElementsByTagName("People").item(0).getTextContent().toString());
+					table.setSmoke(eElement.getElementsByTagName("Smoke").item(0).getTextContent().toString());
+					table.setStartTime(eElement.getElementsByTagName("StartTime").item(0).getTextContent().toString());
+					table.setEndTime(eElement.getElementsByTagName("EndTime").item(0).getTextContent().toString());
+					table.setxPos(eElement.getElementsByTagName("xPos").item(0).getTextContent().toString());
+					table.setyPos(eElement.getElementsByTagName("yPos").item(0).getTextContent().toString());
+
+					tables.add(table);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 }

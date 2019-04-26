@@ -15,53 +15,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlanPanel {
-	
+
 	enum TableKind {
-		RECT,
-		CIRCLE
-	} 
-	
+		RECT, CIRCLE
+	}
+
 	TableKind tableKind;
 
 	JToolBar jtool;
 	JPanel planPanel;
-	JButton rectBtn, circleBtn, deleteBtn, saveButton, loadButton;
+	JButton rectBtn, circleBtn, deleteBtn, saveButton, loadButton, retButton;
 	Boolean isPainting = false;
 	Boolean isDelete = false;
 	List<Table> tables = new ArrayList<Table>();
-	
+
 	TablePref prefOfTable;
 	TableData tabledata;
 	int AmountOfTables = 0;
-	
+
 	JFrame wind;
 
 	PlanPanel(Gui gui) {
 		init(gui);
-		
+
 	}
 
 	private void init(Gui gui) {
+		initToolBar(gui);
+		System.out.println(jtool.getHeight());
 		initPlanPanel(gui.win);
-		initToolBar();
 		
+
 		System.out.println("we ok2");
 	}
-	
-	
 
 	private void initPlanPanel(JFrame win) {
-		
+
 		planPanel = new JPanel(new BorderLayout());
-		win.getContentPane().add(planPanel);
-		planPanel.setBounds(0, 0, win.getWidth(), win.getHeight());
+		win.getContentPane().add(planPanel,BorderLayout.CENTER);
+		planPanel.setBounds(0, 30, win.getWidth() , 600);
 		planPanel.setVisible(true);
-		
 
 		planPanel.addMouseListener(new MouseListener() {
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {
+			}
+
 			public void mousePressed(MouseEvent e) {
-				if(isPainting) {
+				if (isPainting) {
 					isPainting = false;
 					paintTable(e);
 					SetCursor();
@@ -72,26 +72,42 @@ public class PlanPanel {
 					jtool.setVisible(true);
 				}
 			}
-			public void mouseExited(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseClicked(MouseEvent e) {}
+
+			public void mouseExited(MouseEvent e) {
+			}
+
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			public void mouseClicked(MouseEvent e) {
+			}
 		});
-		
+
 		System.out.println("Plan Panel is Ready...");
 	}
 
-	private void initToolBar() {
+	private void initToolBar(Gui gui) {
+		
+		JPanel toolPanel = new JPanel(new BorderLayout());
+		gui.win.getContentPane().add(toolPanel);
+		toolPanel.setBounds(0, 0, gui.win.getWidth(), 30);
+		toolPanel.setVisible(true);
+		//toolPanel.setBackground(Color.BLACK);
+		
 		jtool = new JToolBar("Toolbar");
 		jtool.setVisible(true);
 		jtool.setFloatable(false);
 		
-		addButtons();
-		planPanel.add(jtool, BorderLayout.PAGE_START);
+		addButtons(gui);
+		
+		toolPanel.add(jtool, BorderLayout.CENTER);
+		
+		gui.win.getContentPane().add(toolPanel, BorderLayout.PAGE_START);
 		System.out.println("Tool Bar is Ready...");
 	}
 
-	private void addButtons() {
-		//add rectangle table
+	private void addButtons(Gui gui) {
+		// add rectangle table
 		rectBtn = new JButton("Rectangle Table");
 		jtool.add(rectBtn);
 		rectBtn.addActionListener(new ActionListener() {
@@ -99,8 +115,8 @@ public class PlanPanel {
 				rectButtonPressed();
 			}
 		});
-		
-		//add circle table
+
+		// add circle table
 		circleBtn = new JButton("Circle Table");
 		jtool.add(circleBtn);
 		circleBtn.addActionListener(new ActionListener() {
@@ -108,19 +124,19 @@ public class PlanPanel {
 				circleButtonPressed();
 			}
 		});
-		jtool.addSeparator(new Dimension(20, 20));
+		
+		// DELETE table
+				deleteBtn = new JButton("Delete Table");
+				jtool.add(deleteBtn);
+				deleteBtn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						deleteButtonPressed();
+					}
+				});
+		
+		//jtool.addSeparator(new Dimension(20, 20));
 		jtool.add(Box.createHorizontalGlue());
-		
-		
-		//add circle table
-		deleteBtn = new JButton("Delete Table");
-		jtool.add(deleteBtn);
-		deleteBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				deleteButtonPressed();
-			}
-		});
-		
+
 		saveButton = new JButton("Save Rest");
 		jtool.add(saveButton);
 		saveButton.addActionListener(new ActionListener() {
@@ -128,7 +144,7 @@ public class PlanPanel {
 				saveButtonPressed();
 			}
 		});
-		
+
 		loadButton = new JButton("Load Rest");
 		jtool.add(loadButton);
 		loadButton.addActionListener(new ActionListener() {
@@ -136,30 +152,36 @@ public class PlanPanel {
 				loadButtonPressed();
 			}
 		});
+		
+		retButton = new JButton("Return");
+		jtool.add(retButton);
+		retButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				planPanel.setVisible(false);
+				gui.ShowInit();
+			}
+		});
 	}
-	
+
 	private void deleteButtonPressed() {
 		System.out.println("recr btn");
 		isDelete = true;
-		jtool.setVisible(false);
 	}
-	
+
 	private void rectButtonPressed() {
 		System.out.println("recr btn");
 		tableKind = TableKind.RECT;
 		isPainting = true;
-		jtool.setVisible(false);
 		SetCursor();
 	}
-	
+
 	private void circleButtonPressed() {
 		System.out.println("circ btn");
 		tableKind = TableKind.CIRCLE;
 		isPainting = true;
-		jtool.setVisible(false);
 		SetCursor();
 	}
-	
+
 	private void saveButtonPressed() {
 		Thread thread = new Thread("SavePlanThread") {
 			public void run() {
@@ -170,84 +192,77 @@ public class PlanPanel {
 				}
 				System.out.println("Restaurant has saved...");
 			}
-		
+
 		};
 		thread.start();
 	}
-	
+
 	private void loadButtonPressed() {
-		
-		Thread thread = new Thread("LoadPlanThread") {
-			public void run() {
-				SaveLoad.LoadRest(tables);
-				AmountOfTables = tables.size();
-				drawTables();
-				System.out.println("Restaurant has loaded...");
-			}
-		
-		};
-		thread.start();
+
+		SaveLoad.LoadRest(tables);
+		AmountOfTables = tables.size();
+		drawTables();
+		System.out.println("Restaurant has loaded...");
 	}
-	
+
 	private void SetCursor() {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Image image = null;
 		Cursor c = null;
-		if(isPainting) {
+		if (isPainting) {
 			drawPlanGrid();
-			if(tableKind == TableKind.RECT) {
+			if (tableKind == TableKind.RECT) {
 				image = toolkit.getImage("resources/rectDraw.jpg");
-			} else if(tableKind == TableKind.CIRCLE) {
+			} else if (tableKind == TableKind.CIRCLE) {
 				image = toolkit.getImage("resources/circDraw.jpg");
 			}
-			c = toolkit.createCustomCursor(image , new Point(planPanel.getX(), 
-					planPanel.getY()), "img");
-			
+			c = toolkit.createCustomCursor(image, new Point(planPanel.getX(), planPanel.getY()), "img");
+
 		} else {
 			c = new Cursor(Cursor.DEFAULT_CURSOR);
 		}
-		planPanel.setCursor (c);
+		planPanel.setCursor(c);
 	}
-	
+
 	private void paintTable(MouseEvent e) {
 		System.out.println("I Paint " + tableKind);
 		System.out.println(e.getX() + " and " + e.getY());
-		
+
 		prefOfTable = new TablePref();
 		tabledata = prefOfTable.getTableData();
 		// now we have table data from user.
-		
-		if(tableKind == TableKind.RECT) {
+
+		if (tableKind == TableKind.RECT) {
 			RectTable rectTable = new RectTable();
 			rectTable.setPeople(tabledata.getPeople());
 			rectTable.setSmoke(tabledata.getSmk());
-			rectTable.setxPos((e.getX() - (e.getX()%100))/100);
-			rectTable.setyPos((e.getY() - (e.getY()%100))/100);
+			rectTable.setxPos((e.getX() - (e.getX() % 100)) / 100);
+			rectTable.setyPos((e.getY() - (e.getY() % 100)) / 100);
 			tables.add(rectTable);
 			AmountOfTables++;
 		} else if (tableKind == TableKind.CIRCLE) {
 			CircleTable circTable = new CircleTable();
 			circTable.setPeople(tabledata.getPeople());
 			circTable.setSmoke(tabledata.getSmk());
-			circTable.setxPos((e.getX() - (e.getX()%100))/100);
-			circTable.setyPos((e.getY() - (e.getY()%100))/100);
+			circTable.setxPos((e.getX() - (e.getX() % 100)) / 100);
+			circTable.setyPos((e.getY() - (e.getY() % 100)) / 100);
 			tables.add(circTable);
 			AmountOfTables++;
 		} else {
 			JOptionPane.showMessageDialog(planPanel, "An error occured during picking table kind");
 		}
-		
+
 		drawTables();
 	}
 
 	private void deleteTable(MouseEvent e) {
 		Table table;
 		int xx, yy;
-		xx = (e.getX() - (e.getX()%100))/100;
-		yy = (e.getY() - (e.getY()%100))/100;
-		for(int i = 0; i < AmountOfTables ; i ++) {
+		xx = (e.getX() - (e.getX() % 100)) / 100;
+		yy = (e.getY() - (e.getY() % 100)) / 100;
+		for (int i = 0; i < AmountOfTables; i++) {
 			table = tables.get(i);
-			if(table.getxPos() == xx && table.getyPos() == yy) {
+			if (table.getxPos() == xx && table.getyPos() == yy) {
 				tables.remove(i);
 				AmountOfTables--;
 				break;
@@ -255,22 +270,22 @@ public class PlanPanel {
 		}
 		drawTables();
 	}
-	
+
 	private void drawTables() {
 		Graphics g = planPanel.getGraphics();
-		g.clearRect(0, 0, 1000, 720);
+		g.clearRect(0, 0, 1000, planPanel.getHeight());
 		drawPlanGrid();
-		for(int i = 0; i < AmountOfTables ; i++) {
+		for (int i = 0; i < AmountOfTables; i++) {
 			tables.get(i).printTable(planPanel);
 		}
 	}
-	
+
 	private void drawPlanGrid() {
 		Graphics g = planPanel.getGraphics();
 		g.setColor(Color.LIGHT_GRAY);
-		for(int i = 1; i < 10; i++) {
-			g.drawLine(i*100 -1, -50, i*100 -1, 699);
-			g.drawLine(0 , i*100 -1, 999, i*100 -1);
+		for (int i = 1; i < 10; i++) {
+			g.drawLine(i * 100 - 1, 0, i * 100 - 1, 699);
+			g.drawLine(0, i * 100 - 1, 999, i * 100 - 1);
 		}
 		System.out.println("Grid has painted...");
 	}
