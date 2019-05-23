@@ -1,4 +1,4 @@
-package com.gui;
+package com.View;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -18,7 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.db.TableData;
+import com.Model.PaintMode;
+import com.Model.TableData;
 
 
 public class TablePref /*extends JFrame*/ {
@@ -31,8 +33,9 @@ public class TablePref /*extends JFrame*/ {
 	
 	JTextField people;
 	JComboBox<Boolean> smk;
+	private int xPos, yPos;
 	
-	TablePref(){
+	public TablePref(){
 		int i = 20;
 
 		mainPanel = new JPanel();

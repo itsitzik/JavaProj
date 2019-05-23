@@ -1,4 +1,4 @@
-package com.db;
+package com.Model;
 
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -20,15 +20,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-import com.gui.CircleTable;
-import com.gui.RectTable;
-import com.gui.Table;
+import com.Model.CircleTable;
+import com.Model.RectTable;
+import com.Model.Table;
 
 public class SaveLoad {
+	
+	private final static SaveLoad SAVELOAD = new SaveLoad();
 
-	private static final String pre = "com.gui.";
+	private static final String pre = "com.Model.";
+	
+	public static SaveLoad getInstance() {
+	    return SAVELOAD;
+	  }
 
-	public static void SaveRest(List<Table> tables) throws TransformerException {
+	public void SaveRest(List<Table> tables) throws TransformerException {
 
 		Element table, tableClass, tablePeople, tableXpos, tableYpos, tableStart, tableEnd, tableSmoke;
 
@@ -87,7 +93,7 @@ public class SaveLoad {
 		}
 	}
 
-	public static void LoadRest(List<Table> tables) {
+	public void LoadRest(List<Table> tables) {
 		tables.removeAll(tables);
 		Table table;
 		System.out.println(tables.size());

@@ -9,8 +9,13 @@ import java.awt.event.MouseListener;
 import javax.swing.*;
 import javax.xml.transform.TransformerException;
 
-import com.db.SaveLoad;
-import com.db.TableData;
+import com.Model.CircleTable;
+import com.Model.RectTable;
+import com.Model.SaveLoad;
+import com.Model.Table;
+import com.Model.TableData;
+import com.View.TablePref;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +32,9 @@ public class PlanPanel {
 	JButton rectBtn, circleBtn, deleteBtn, saveButton, loadButton, retButton;
 	Boolean isPainting = false;
 	Boolean isDelete = false;
+	
 	List<Table> tables = new ArrayList<Table>();
+	
 
 	TablePref prefOfTable;
 	TableData tabledata;
@@ -185,11 +192,11 @@ public class PlanPanel {
 	private void saveButtonPressed() {
 		Thread thread = new Thread("SavePlanThread") {
 			public void run() {
-				try {
-					SaveLoad.SaveRest(tables);
-				} catch (TransformerException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					SaveLoad.SaveRest(tables);
+//				} catch (TransformerException e) {
+//					e.printStackTrace();
+//				}
 				System.out.println("Restaurant has saved...");
 			}
 
@@ -199,7 +206,7 @@ public class PlanPanel {
 
 	private void loadButtonPressed() {
 
-		SaveLoad.LoadRest(tables);
+		//SaveLoad.LoadRest(tables);
 		AmountOfTables = tables.size();
 		drawTables();
 		System.out.println("Restaurant has loaded...");

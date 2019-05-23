@@ -1,4 +1,4 @@
-package com.db;
+package com.Model;
 
 public class TableData{
 	private int people = 0;

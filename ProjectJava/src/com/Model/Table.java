@@ -1,4 +1,4 @@
-package com.gui;
+package com.Model;
 
 import java.awt.Graphics;
 import java.time.LocalTime;
@@ -23,7 +23,8 @@ public abstract class Table {
 		this.setyPos(yPos);
 	}
 
-	abstract void printTable(JPanel win);
+	public abstract void printTable(JPanel win);
+	public abstract PaintMode getTableKind();
 
 	public int getPeople() {
 		return people;
