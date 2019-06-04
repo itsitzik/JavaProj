@@ -1,4 +1,4 @@
-package com.gui;
+package com.View;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -12,27 +12,29 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class InitPanel {
+public class InitView extends JPanel {
 	
-	JPanel initPanel;
+	Rest rest;
 	JButton planB, manageB;
-	
-	InitPanel(Gui gui) {
+
+	public InitView(Rest rest) {
+		this.rest = rest;
 		
-		AddInitPanel(gui.win);
+		AddInitPanel(rest);
 		AddInitLabel("Welcome To RestPnM");
-		AddInitButtons(gui);
+		AddInitButtons(rest);
+		revalidate();
+		setVisible(true);
 	}
 
 	private void AddInitPanel(JFrame win) {
 		
 		Graphics g = win.getGraphics();
-		g.clearRect(0, 0, 1000, 200);
+		g.clearRect(0, 0, win.getWidth(), win.getHeight());
 		
-		initPanel = new JPanel(new GridLayout(2, 1));
-		initPanel.setBounds(0, 200, 1000, 200);
-		initPanel.setVisible(true);
-		win.getContentPane().add(initPanel);
+		setLayout(new GridLayout(2, 1));
+		setBounds(0, 200, rest.getWidth(), 200);
+		win.getContentPane().add(this);
 		
 	}
 
@@ -40,7 +42,7 @@ public class InitPanel {
 
 		JPanel labelpan = new JPanel();
 		labelpan.setSize(1000, 1);
-		initPanel.add(labelpan, BorderLayout.NORTH);
+		add(labelpan, BorderLayout.NORTH);
 
 		JLabel label = new JLabel(str);
 		Font font = new Font("arial", Font.PLAIN, 30);
@@ -49,31 +51,46 @@ public class InitPanel {
 
 	}
 
-	private void AddInitButtons(Gui gui) {
+	private void AddInitButtons(JFrame win) {
 
 		JPanel buttonspan = new JPanel();
 		buttonspan.setSize(1000, 1);
-		initPanel.add(buttonspan, BorderLayout.SOUTH);
+		add(buttonspan, BorderLayout.SOUTH);
 
 		planB = new JButton("Plan Restaurant");
 		planB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				initPanel.setVisible(false);
-				gui.ShowPlan();
+				//initPanel.setVisible(false);
+				//gui.ShowPlan();
 			}
 		});
 
 		manageB = new JButton("Mannage Restaurant");
 		manageB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				initPanel.setVisible(false);
-				gui.ShowManage();
+				//initPanel.setVisible(false);
+				//gui.ShowManage();
 			}
 		});
-		
+
 		buttonspan.add(planB, BorderLayout.EAST);
 		buttonspan.add(manageB, BorderLayout.WEST);
 	}
 
+	public JButton getPlanB() {
+		return planB;
+	}
+
+	public void setPlanB(JButton planB) {
+		this.planB = planB;
+	}
+
+	public JButton getManageB() {
+		return manageB;
+	}
+
+	public void setManageB(JButton manageB) {
+		this.manageB = manageB;
+	}
 	
 }
