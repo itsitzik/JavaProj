@@ -15,7 +15,7 @@ import com.Model.PaintMode;
 import com.Model.Table;
 import com.View.PlanView;
 
-public class MannagePanelView extends JPanel implements Observer {
+public class ManagePanelView extends JPanel implements Observer {
 	
 	private final int size = 100;
 	private final int lnSpace = 15;
@@ -24,9 +24,9 @@ public class MannagePanelView extends JPanel implements Observer {
 	
 	List<Table> tables = new ArrayList<Table>();
 	
-	MannageView mannageView;
+	ManageView mannageView;
 	
-	public MannagePanelView(MannageView mannageView){
+	public ManagePanelView(ManageView mannageView){
 		this.mannageView = mannageView;
 		mannageView.add(this,BorderLayout.CENTER);
 		this.setBounds(0, 30, mannageView.getWidth() , 600);

@@ -3,7 +3,6 @@ package com.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JOptionPane;
 import javax.xml.transform.TransformerException;
@@ -12,7 +11,7 @@ import com.Model.Table;
 import com.View.PlanView;
 import com.Model.PaintMode;
 
-public class PlanModel extends Observable {
+public class PlanModel extends Observable implements Model {
 
 	List<Table> tables = new ArrayList<Table>();
 
@@ -77,7 +76,7 @@ public class PlanModel extends Observable {
 
 	public void saveModel() {
 		try {
-			SaveLoad.getInstance().SaveRest(tables);
+			SaveLoad.getInstance().SavePreset(tables, "Rest.xml");
 			notifyAllObservers();
 		} catch (TransformerException e) {
 			e.printStackTrace();
@@ -86,7 +85,7 @@ public class PlanModel extends Observable {
 	}
 
 	public void loadModel() {
-		SaveLoad.getInstance().LoadRest(tables);
+		SaveLoad.getInstance().LoadPreset(tables, "Rest.xml");
 		notifyAllObservers();
 	}
 

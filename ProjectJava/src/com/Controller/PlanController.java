@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 import com.Model.PlanModel;
 import com.Model.TableData;
 import com.Model.PaintMode;
-import com.View.PlanPanelView;
+import com.View.TablesPanelView;
 import com.View.PlanView;
 import com.View.TablePref;
 

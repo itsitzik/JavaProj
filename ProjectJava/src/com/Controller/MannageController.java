@@ -8,48 +8,66 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalTime;
 
-import com.Model.MannageModel;
+import javax.swing.JOptionPane;
+
+import com.Model.ManageModel;
 import com.Model.TableData;
+import com.Model.TimePicker;
+import com.Model.ManageMode;
 import com.Model.PaintMode;
-import com.View.MannagePanelView;
-import com.View.MannageView;
+import com.Model.RestData;
+import com.Model.Table;
+import com.View.ManagePanelView;
+import com.View.ManageView;
+import com.View.RestInfo;
 import com.View.TablePref;
 
 public class MannageController {
 
-	MannageModel mannageModel;
-	MannageView mannageView;
-	PaintMode paintMode;
+	ManageModel manageModel;
+	ManageView manageView;
+	ManageMode manageMode;
 
-	public MannageController(MannageModel mannageModel, MannageView mannageView) {
-		this.mannageModel = mannageModel;
-		this.mannageView = mannageView;
-		paintMode = PaintMode.NOT;
+	public MannageController(ManageModel manageModel, ManageView manageView) {
+		this.manageModel = manageModel;
+		this.manageView = manageView;
+		manageMode = ManageMode.INIT;
 
 		addToolbarListeners();
-		addMannagePanelListeners();
-		addToolSaveLoadListeners();
+		addManagePanelListeners();
+		addToolOpenCloseListeners();
 
 	}
-	
-	//add listeners functions
+
+	// add listeners functions
 
 	private void addToolbarListeners() {
 
-		//mannageView.getJtool().getRectBtn().addActionListener(e -> startPainting(PaintMode.RECT));
-		//mannageView.getJtool().getCircleBtn().addActionListener(e -> startPainting(PaintMode.CIRCLE));
-		//mannageView.getJtool().getDeleteBtn().addActionListener(e -> startPainting(PaintMode.DELETE));
-		//mannageView.getJtool().getCancelBtn().addActionListener(e -> endPainting());
+		 manageView.getJtool().getRestInfoButton().addActionListener(e -> showInfo());
+		// mannageView.getJtool().getCircleBtn().addActionListener(e ->
+		// startPainting(PaintMode.CIRCLE));
+		// mannageView.getJtool().getDeleteBtn().addActionListener(e ->
+		// startPainting(PaintMode.DELETE));
+		// mannageView.getJtool().getCancelBtn().addActionListener(e -> endPainting());
 	}
 
-	private void addMannagePanelListeners() {
-		mannageView.getMannagePanel().addMouseListener(new MouseListener() {
+	private void showInfo() {
+		RestInfo.showInfo(manageModel.getRestInfo());
+	}
+
+	private void addManagePanelListeners() {
+		manageView.getManagePanel().addMouseListener(new MouseListener() {
 			public void mousePressed(MouseEvent e) {
-				mannagePanelClicked(e);
+
 			}
 
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2 && !e.isConsumed()) {
+					e.consume();
+					mannagePanelClicked(e);
+				}
 			}
 
 			public void mouseEntered(MouseEvent arg0) {
@@ -63,19 +81,30 @@ public class MannageController {
 
 		});
 	}
-	
 
-	private void addToolSaveLoadListeners() {
+	private void addToolOpenCloseListeners() {
 		System.out.println("N/A");
-//		mannageView.getJtool().getSaveButton().addActionListener(e -> saveRest());
-//		mannageView.getJtool().getLoadButton().addActionListener(e -> loadRest());
+		manageView.getJtool().getOpenRestButton().addActionListener(e -> openRest());
+		manageView.getJtool().getCloseRestButton().addActionListener(e -> closeRest());
 	}
-	
-	//save load functions
-	
-	private void loadRest() {
-		System.out.println("N/A");
-//		mannageModel.loadModel();
+
+	// save load functions
+
+	private void openRest() {
+		manageMode = ManageMode.WORKING;
+		manageModel.setRestInfo(LocalTime.now(), TimePicker.getTime(), 0, 0);
+		manageModel.loadModel();
+		manageView.getJtool().openButtonsState();
+	}
+
+	private void closeRest() {
+		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to close the restaurent for today?", "",
+				JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			manageMode = ManageMode.CLOSE;
+			manageView.getJtool().closeButtonsState();
+			// StartCloseSequence();
+		}
 	}
 
 	private void saveRest() {
@@ -85,35 +114,31 @@ public class MannageController {
 
 	private void mannagePanelClicked(MouseEvent e) {
 		System.out.println("N/A");
-//		int xPos,yPos;		
-//		if (paintMode != PaintMode.NOT) {
-//			xPos = (e.getX() - (e.getX() % 100)) / 100;
-//			yPos = (e.getY() - (e.getY() % 100)) / 100;
-//			if (paintMode == PaintMode.DELETE) {
-//				mannageModel.deleteTable(xPos, yPos);
-//			} else {
-//				TablePref prefOfTable = new TablePref();
-//				TableData tableData = prefOfTable.getTableData();
-//				mannageModel.addTable(tableData, xPos, yPos, paintMode);
-//			}
-//			endPainting();
-//			return;
-//		}
+
+		int xPos, yPos;
+		xPos = (e.getX() - (e.getX() % 100)) / 100;
+		yPos = (e.getY() - (e.getY() % 100)) / 100;
+		int TableInd = manageModel.getTableIndexByXY(xPos, yPos);
+
+		if (TableInd != -1) {
+			if (!manageModel.getIsTakenByIndex(TableInd)) {
+				sitGuests(TableInd);
+				System.out.println("Table " + TableInd + " is now taken...");
+			} else {
+				// start close table
+				System.out.println("Table " + TableInd + " is now free...");
+			}
+		}
+
 //		System.out.println("No new Tables Created...");
 	}
-	
-	//Painting functions
-	
-	private void startPainting(PaintMode paintMode) {
-		this.paintMode = paintMode;
-		mannageView.setCursor(paintMode);
-		System.out.println("Paint mode has Started...");
-	}
 
-	private void endPainting() {
-		this.paintMode = PaintMode.NOT;
-		mannageView.setCursor(paintMode);
-		System.out.println("Paint mode has Stopped...");
+	private void sitGuests(int tableInd) {
+		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to sit on this table?", "",
+				JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			manageModel.sitGuests(tableInd);
+		}
 	}
 
 }

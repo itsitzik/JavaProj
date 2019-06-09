@@ -9,27 +9,23 @@ import javax.swing.SwingUtilities;
 import com.Controller.PlanController;
 import com.Controller.MannageController;
 import com.Model.PlanModel;
-import com.Model.MannageModel;
-import com.gui.InitPanel;
-import com.gui.Mode;
-import com.gui.PlanPanel;
-import com.gui.MannagePanel;
+import com.Model.ManageModel;
+import com.Model.Mode;
 
 public class Rest extends JFrame {
 	
 	private int scrWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private int scrHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-	public InitPanel initPanel;
 	
-	public MannageView mannageView;
+	public ManageView manageView;
 	public PlanView planView;
 	public InitView initView;
 	
 	public PlanModel planModel;
-	public MannageModel mannageModel;
+	public ManageModel manageModel;
 	
 	public PlanController planController; 
-	public MannageController mannageController; 
+	public MannageController manageController; 
 	
 	private Mode mode;
 	
@@ -90,15 +86,15 @@ public class Rest extends JFrame {
 	public void ApplyManageApp() {
 		mode = Mode.MANAGE;
 		this.getContentPane().removeAll();
-		mannageView = new MannageView(this);
-		mannageModel = new MannageModel(mannageView);
-		mannageController = new MannageController(mannageModel, mannageView);
+		manageView = new ManageView(this);
+		manageModel = new ManageModel(manageView);
+		manageController = new MannageController(manageModel, manageView);
 		AddMannageListeners();
 		System.out.println("Manage Mode Initiated...");
 	}
 
 	private void AddMannageListeners() {
-		planView.getJtool().getRetButton().addActionListener(e -> ApplyInitApp());
+		manageView.getJtool().getRetButton().addActionListener(e -> ApplyInitApp());
 	}
 	
 	public int getScrWidth() {
