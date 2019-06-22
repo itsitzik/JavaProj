@@ -80,6 +80,23 @@ public class ManageModel extends Observable implements Model {
 		restData = new RestData(now, time, i, j);
 	}
 	
+	public void freeTable(int index, double money) {
+		addTebleServed();
+		addProfit(money);
+		tables.get(index).setTaken(false);
+		tables.get(index).setEndTime("00:00");
+		tables.get(index).setStartTime("00:00");
+		notifyAllObservers();
+	}
+	
+	private void addTebleServed() {
+		restData.tablesServed++;
+	}
+	
+	private void addProfit(double money) {
+		restData.TodayProfit += money;
+	}
+	
 	public RestData getRestInfo() {
 		return restData;
 	}

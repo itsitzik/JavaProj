@@ -22,6 +22,7 @@ import com.Model.Table;
 import com.View.ManagePanelView;
 import com.View.ManageView;
 import com.View.RestInfo;
+import com.View.TableFree;
 import com.View.TablePref;
 
 public class MannageController {
@@ -39,6 +40,7 @@ public class MannageController {
 		addManagePanelListeners();
 		addToolOpenCloseListeners();
 
+		openRest();
 	}
 
 	// add listeners functions
@@ -46,11 +48,12 @@ public class MannageController {
 	private void addToolbarListeners() {
 
 		 manageView.getJtool().getRestInfoButton().addActionListener(e -> showInfo());
-		// mannageView.getJtool().getCircleBtn().addActionListener(e ->
-		// startPainting(PaintMode.CIRCLE));
-		// mannageView.getJtool().getDeleteBtn().addActionListener(e ->
-		// startPainting(PaintMode.DELETE));
-		// mannageView.getJtool().getCancelBtn().addActionListener(e -> endPainting());
+		 manageView.getJtool().getFindTableButton().addActionListener(e -> findTable());
+
+	}
+
+	private void findTable() {
+		FindTable findTable = new FindTable(manageModel.getTables());
 	}
 
 	private void showInfo() {
@@ -83,7 +86,6 @@ public class MannageController {
 	}
 
 	private void addToolOpenCloseListeners() {
-		System.out.println("N/A");
 		manageView.getJtool().getOpenRestButton().addActionListener(e -> openRest());
 		manageView.getJtool().getCloseRestButton().addActionListener(e -> closeRest());
 	}
@@ -125,7 +127,7 @@ public class MannageController {
 				sitGuests(TableInd);
 				System.out.println("Table " + TableInd + " is now taken...");
 			} else {
-				// start close table
+				freeGuests(TableInd);
 				System.out.println("Table " + TableInd + " is now free...");
 			}
 		}
@@ -133,11 +135,22 @@ public class MannageController {
 //		System.out.println("No new Tables Created...");
 	}
 
+	private void freeGuests(int tableInd) {
+		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to free this table?", "",
+				JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			TableFree tableFree = new TableFree();
+			manageModel.freeTable(tableInd, tableFree.getBillData());
+		}
+
+	}
+	
 	private void sitGuests(int tableInd) {
 		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to sit on this table?", "",
 				JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			manageModel.sitGuests(tableInd);
+
 		}
 	}
 

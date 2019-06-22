@@ -4,6 +4,14 @@ public class TableData{
 	private int people = 0;
 	private Boolean smk = false;
 	
+	public TableData() {
+	}
+	
+	public TableData(int p, Boolean smk) {
+		this.people = p;
+		this.smk = smk;
+	}
+	
 	public int getPeople() {
 		return people;
 	}
