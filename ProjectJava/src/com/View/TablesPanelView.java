@@ -1,8 +1,13 @@
 package com.View;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +15,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
+import com.Model.Obstacle;
 import com.Model.PaintMode;
 import com.Model.Table;
 import com.View.PlanView;
@@ -20,16 +27,32 @@ public class TablesPanelView extends JPanel implements Observer {
 	private final int size = 100;
 	private final int lnSpace = 15;
 	private final int padding = 5;
+	private Timer timer;
 
 	JPanel container;
 
 	List<Table> tables = new ArrayList<Table>();
+	List<Obstacle> obstacles = new ArrayList<Obstacle>();
 
 	public TablesPanelView(JPanel container) {
 		this.container = container;
 		container.add(this, BorderLayout.CENTER);
 		this.setBounds(0, 30, container.getWidth(), 600);
 		this.setVisible(true);
+		
+		defineTimer();
+	}
+
+	private void defineTimer() {
+		ActionListener timeOutRoutine = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Panel Refreshed: t/o");
+				repaint();
+			}
+		};
+		timer = new Timer(120000, timeOutRoutine);
+		timer.setRepeats(true);
+        timer.start();
 
 	}
 
@@ -37,6 +60,15 @@ public class TablesPanelView extends JPanel implements Observer {
 		super.paintComponent(g);
 		drawPlanGrid(g);
 		drawTables(g);
+		drawObstacles(g);
+	}
+
+	private void drawObstacles(Graphics g) {
+		g.setColor(Color.DARK_GRAY);
+		for (int i = 0; i < obstacles.size(); i++) {
+			g.drawRect(obstacles.get(i).getxPos() * size - 1, obstacles.get(i).getyPos() * size - 1, size, size);
+		}
+		
 	}
 
 	private void drawPlanGrid(Graphics g) {
@@ -58,7 +90,9 @@ public class TablesPanelView extends JPanel implements Observer {
 	public void printTable(Table table, Graphics g) {
 
 		PaintMode tableToPaint = table.getTableKind();
-		Color color = table.getTaken() ? Color.RED : Color.GREEN;
+		int timeToFree = (int) MINUTES.between(LocalTime.now(), table.getEndTime());
+		Color color = table.getTaken() ? (timeToFree <= 0 ? Color.ORANGE: Color.RED) : Color.GREEN; // change to 0
+
 
 		if (tableToPaint == PaintMode.RECT) {
 			g.drawRect(table.getxPos() * size - 1, table.getyPos() * size - 1, size, size);
@@ -90,5 +124,6 @@ public class TablesPanelView extends JPanel implements Observer {
 		this.tables = (List<Table>) tables;
 		repaint();
 	}
+	
 	
 }

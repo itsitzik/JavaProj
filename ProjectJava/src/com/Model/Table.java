@@ -6,12 +6,12 @@ import java.util.Date;
 
 import javax.swing.JPanel;
 
-public abstract class Table {
+public abstract class Table extends Obstacle {
 	private int people;
 	private Boolean taken = false;
 	private LocalTime startTime, endTime;
 	private boolean isSmoke;
-	private int xPos, yPos;
+	
 
 	public Table(int _p, boolean _t, LocalTime _strt, LocalTime _end, boolean _smk, int xPos, int yPos) {
 		this.setPeople(_p);
@@ -111,14 +111,6 @@ public abstract class Table {
 		this.xPos = xPos;
 	}
 
-	public void setxPos(String xPos) {
-		try {
-			this.xPos = Integer.parseInt(xPos);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public int getyPos() {
 		return yPos;
 	}
@@ -127,11 +119,4 @@ public abstract class Table {
 		this.yPos = yPos;
 	}
 
-	public void setyPos(String yPos) {
-		try {
-			this.yPos = Integer.parseInt(yPos);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

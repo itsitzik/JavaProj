@@ -5,15 +5,19 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.time.LocalTime;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.print.attribute.IntegerSyntax;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -34,26 +38,73 @@ public class FindTable extends JFrame {
 	JTable list;
 	List<Table> tables = new ArrayList<Table>();
 	JTextField people;
+	JButton confirm, filter;
 	JComboBox<Boolean> smk;
 	int Choosen;
-	String[] colNames = {"id","people","smk"};
+	String[] colNames = {"id","people","smk", "freetime"};
 	DefaultTableModel dtm = new DefaultTableModel(0, 0);
 	
 	public FindTable(List<Table> tables) {
 		this.tables = tables;
 		designFrame();
+		initSystem();
 	}
 	
+	private void initSystem() {
+		
+
+		this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				people.setText("");
+				smk.setSelectedIndex(0);
+				dtm.setRowCount(0);
+			}
+			@Override
+			public void windowActivated(WindowEvent arg0) {}
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+			}
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {}
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {}
+			@Override
+			public void windowIconified(WindowEvent arg0) {}
+			@Override
+			public void windowOpened(WindowEvent arg0) {}
+		});
+		
+		filter.addActionListener(e -> filterResult());
+	}
 	
-	
+	private void filterResult() {
+		dtm.setRowCount(0);
+		int enteredPeople;
+		try {
+			enteredPeople = Integer.parseInt(people.getText());
+			if(enteredPeople >= 1) {
+				findTable(tables, new TableData(enteredPeople,(Boolean)smk.getSelectedItem()));
+			} else {
+				JOptionPane.showMessageDialog(this, "Please enter more than positive number of people");
+				people.setText("");
+			}
+		
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Please enter valid information\n" +  e.getMessage());
+			people.setText("");
+		}
+	}
+
 	private void designFrame() {
 		int i = 20;
 		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
-		this.setBounds(scrWidth/2 - 175, scrHeight/2 - 250, 350 , 500);
-		this.setVisible(true);
+		this.setBounds(scrWidth/2 - 175, scrHeight/2 - 250, 350 , 550);
+		this.setVisible(false);
 
 		mainPanel = new JPanel();
 		mainPanel.setLayout(null);
@@ -83,13 +134,24 @@ public class FindTable extends JFrame {
 		Boolean[] vec = new Boolean[] {true, false};
 		smk = new JComboBox<Boolean>(vec);
 		mainPanel.add(smk);
-		smk.setBounds(20, i, 300, 25);
+		smk.setBounds(20, i, 140, 25);
+		
+		filter = new JButton("Filter");
+		mainPanel.add(filter);
+		filter.setBounds(180,i,140,25);
 		i+=35;
+		
 		
 		list = new JTable();
 		mainPanel.add(list);
-		list.setBounds(20, i, 300, 500 - 60 - i);
+		list.setBounds(20, i, 300, 500 - 40 - i);
 		list.setVisible(true);
+		i+= 500 - 60 - i + 35;
+		
+		confirm = new JButton("Confirm");
+		mainPanel.add(confirm);
+		confirm.setBounds(20, i, 300, 25);
+		confirm.setVisible(true);
 		
 		mainPanel.setVisible(true);
 		
@@ -97,28 +159,47 @@ public class FindTable extends JFrame {
 		list.setModel(dtm);
 		list.setDefaultEditor(Object.class, null);
 
-		
-		findTable(tables, new TableData(1,true));
+	}
+	
+	public void showFind() {
+		this.setVisible(true);
 	}
 
 
 
 	private void findTable(List<Table> tables, TableData data) {
-
 		int size = tables.size();
+		int timeToFree;
 		for(int i = 0; i < size; i++) {
 			Table table = tables.get(i);
 			if(table.getPeople() >= data.getPeople()) {
 				if(table.isSmoke() == data.getSmk()) {
-					if(table.getTaken() == false || MINUTES.between(LocalTime.now(), table.getEndTime()) < 20) {
-						dtm.addRow(new Object[] {i,table.getPeople(),table.isSmoke()});
+					timeToFree = (int) MINUTES.between(LocalTime.now(), table.getEndTime());
+					if(timeToFree < 0) timeToFree = 0;
+					if(table.getTaken() == false || timeToFree < 20) { // !!!!change to 20!!!!!!
+						dtm.addRow(new Object[] {i,table.getPeople(),table.isSmoke(),timeToFree});
 					}
 
 				}
 			}
 		}
-		
 
+	}
+	
+	public JButton getConfirm() {
+		return confirm;
+	}
+
+	public void setConfirm(JButton confirm) {
+		this.confirm = confirm;
+	}
+
+	public DefaultTableModel getDtm() {
+		return dtm;
+	}
+
+	public JTable getList() {
+		return list;
 	}
 }
 

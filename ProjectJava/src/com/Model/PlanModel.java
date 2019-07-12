@@ -14,6 +14,7 @@ import com.Model.PaintMode;
 public class PlanModel extends Observable implements Model {
 
 	List<Table> tables = new ArrayList<Table>();
+	List<Obstacle> obstacles = new ArrayList<Obstacle>();
 
 	public PlanModel(PlanView planView) {
 		super.addObserver(planView.getPlanPanel());
@@ -85,7 +86,7 @@ public class PlanModel extends Observable implements Model {
 	}
 
 	public void loadModel() {
-		SaveLoad.getInstance().LoadPreset(tables, "Rest.xml");
+		SaveLoad.getInstance().LoadPreset(tables, obstacles, "Rest.xml");
 		notifyAllObservers();
 	}
 

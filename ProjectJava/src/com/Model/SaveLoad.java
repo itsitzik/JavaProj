@@ -31,6 +31,7 @@ public class SaveLoad {
 	public void SavePreset(List<Table> tables, String filename) throws TransformerException {
 
 		Element table, tableClass, tablePeople, tableXpos, tableYpos, tableStart, tableEnd, tableSmoke;
+		Element obstacle, obsXpos, obsYpos;
 
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -87,9 +88,13 @@ public class SaveLoad {
 		}
 	}
 
-	public void LoadPreset(List<Table> tables, String filename) {
+	public void LoadPreset(List<Table> tables, List<Obstacle> obstacles, String filename) {
 		tables.removeAll(tables);
+		obstacles.removeAll(obstacles);
 		Table table;
+		Obstacle obstacle;
+		Node nNode;
+		Element eElement;
 
 		try {
 			File inputFile = new File("./" + filename);
@@ -101,9 +106,9 @@ public class SaveLoad {
 			NodeList nList = doc.getElementsByTagName("Table");
 
 			for (int i = 0; i < nList.getLength(); i++) {
-				Node nNode = nList.item(i);
+				nNode = nList.item(i);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
+					eElement = (Element) nNode;
 					if (eElement.getElementsByTagName("Class").item(0).getTextContent().toString()
 							.equals(pre + "RectTable")) {
 						RectTable recTable = new RectTable();
@@ -121,6 +126,18 @@ public class SaveLoad {
 					table.setyPos(eElement.getElementsByTagName("yPos").item(0).getTextContent().toString());
 
 					tables.add(table);
+				}
+			}
+			
+			nList = doc.getElementsByTagName("Obstacle");
+			
+			for (int i = 0; i < nList.getLength(); i++) {
+				nNode = nList.item(i);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					eElement = (Element) nNode;
+					obstacle = new Obstacle();
+					obstacle.setxPos(eElement.getElementsByTagName("xPos").item(0).getTextContent().toString());
+					obstacle.setyPos(eElement.getElementsByTagName("yPos").item(0).getTextContent().toString());
 				}
 			}
 		} catch (Exception e) {

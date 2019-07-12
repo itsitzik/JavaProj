@@ -7,12 +7,14 @@ public class RestData {
 	LocalTime closeTime;
 	double TodayProfit;
 	int tablesServed;
+	int waiting;
 	
-	public RestData(LocalTime now, LocalTime time, int TodayProfit, int tablesServed) {
+	public RestData(LocalTime now, LocalTime time, int TodayProfit, int tablesServed, int waiting) {
 		this.openTime = now;
 		this.closeTime = time;
 		this.TodayProfit = TodayProfit;
-		this.tablesServed = tablesServed;		
+		this.tablesServed = tablesServed;	
+		this.waiting = waiting;
 	}
 
 	public LocalTime getOpenTime() {
@@ -45,5 +47,13 @@ public class RestData {
 
 	public void setTablesServed(int tablesServed) {
 		this.tablesServed = tablesServed;
+	}
+
+	public int getWaiting() {
+		return waiting;
+	}
+
+	public void setWaiting(int waiting) {
+		this.waiting = waiting;
 	}
 }

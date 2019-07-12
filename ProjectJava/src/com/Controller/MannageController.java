@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 import java.time.LocalTime;
 
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class MannageController {
 	ManageModel manageModel;
 	ManageView manageView;
 	ManageMode manageMode;
+	FindTable findTable;
 
 	public MannageController(ManageModel manageModel, ManageView manageView) {
 		this.manageModel = manageModel;
@@ -41,19 +43,50 @@ public class MannageController {
 		addToolOpenCloseListeners();
 
 		openRest();
+		addFindTableSys();
+
 	}
 
 	// add listeners functions
 
 	private void addToolbarListeners() {
 
-		 manageView.getJtool().getRestInfoButton().addActionListener(e -> showInfo());
-		 manageView.getJtool().getFindTableButton().addActionListener(e -> findTable());
+		manageView.getJtool().getRestInfoButton().addActionListener(e -> showInfo());
+		manageView.getJtool().getFindTableButton().addActionListener(e -> findTable());
 
 	}
 
+	private void addFindTableSys() {
+		findTable = new FindTable(manageModel.getTables());
+		findTable.getConfirm().addActionListener(e -> addFoundTable());
+	}
+
+	private void addFoundTable() {
+		int index;
+		try {
+			index = (int) findTable.getList().getValueAt(findTable.getList().getSelectedRow(), 0);
+			if (index >= 0) {
+				if(manageModel.getTables().get(index).getTaken() == false) {
+					sitGuests(index);
+				} else {
+					addToWaiting(index);
+				}
+				findTable.dispatchEvent(new WindowEvent(findTable, WindowEvent.WINDOW_CLOSING));
+			} else {
+				JOptionPane.showMessageDialog(findTable, "Please select table from the list table");
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(findTable, "System Error: Table not found");
+		}
+		
+	}
+
+	private void addToWaiting(int index) {
+		manageModel.addWait(index);
+	}
+
 	private void findTable() {
-		FindTable findTable = new FindTable(manageModel.getTables());
+		findTable.showFind();
 	}
 
 	private void showInfo() {
@@ -94,7 +127,7 @@ public class MannageController {
 
 	private void openRest() {
 		manageMode = ManageMode.WORKING;
-		manageModel.setRestInfo(LocalTime.now(), TimePicker.getTime(), 0, 0);
+		manageModel.setRestInfo(LocalTime.now(), TimePicker.getTime(), 0, 0,0);
 		manageModel.loadModel();
 		manageView.getJtool().openButtonsState();
 	}
@@ -136,17 +169,21 @@ public class MannageController {
 	}
 
 	private void freeGuests(int tableInd) {
-		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to free this table?", "",
+		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to free table number: " + tableInd + "?", "",
 				JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			TableFree tableFree = new TableFree();
 			manageModel.freeTable(tableInd, tableFree.getBillData());
+			if(manageModel.isWaiting(tableInd)) {
+				sitGuests(tableInd);
+				manageModel.clearWait(tableInd);
+			}
 		}
 
 	}
-	
+
 	private void sitGuests(int tableInd) {
-		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to sit on this table?", "",
+		int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to sit on table number: " + tableInd + "?", "",
 				JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			manageModel.sitGuests(tableInd);

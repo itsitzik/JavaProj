@@ -3,8 +3,10 @@ package com.Model;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Queue;
 
 import com.Model.Table;
 import com.View.ManageView;
@@ -15,6 +17,8 @@ public class ManageModel extends Observable implements Model {
 
 	RestData restData;
 	List<Table> tables = new ArrayList<Table>();
+	List<Obstacle> obstacles = new ArrayList<Obstacle>();
+	List<Integer> waiting = new ArrayList<Integer>();
 
 	public ManageModel(ManageView manageView) {
 		super.addObserver(manageView.getManagePanel());
@@ -50,7 +54,7 @@ public class ManageModel extends Observable implements Model {
 	}
 
 	public void loadModel() {
-		SaveLoad.getInstance().LoadPreset(tables, "Rest.xml");
+		SaveLoad.getInstance().LoadPreset(tables, obstacles, "Rest.xml");
 		setInitState();
 		notifyAllObservers();
 		
@@ -62,12 +66,36 @@ public class ManageModel extends Observable implements Model {
 
 	private void setInitState() {
 		for(int i = 0 ; i < tables.size(); i++) {
+			waiting.add(0);
 			tables.get(i).setStartTime("00:00");
 			tables.get(i).setEndTime("00:00");
 		}
 		
 	}
+	
+	public void addWait(int tableInd) {
+		waiting.set(tableInd, 1);
+		IncWaiting();
+	}
 
+	public void clearWait(int tableInd) {
+		waiting.set(tableInd, 0);
+		DecWaiting();
+	}
+	
+	public Boolean isWaiting(int tableInd) {
+		return waiting.get(tableInd) == 1 ? true : false;
+	}
+	
+	private void IncWaiting() {
+		restData.waiting++;
+	}
+	
+	private void DecWaiting() {
+		restData.waiting--;
+		if(restData.waiting < 0) restData.waiting = 0;
+	}
+	
 	public void sitGuests(int tableInd) {
 		Table table = tables.get(tableInd);
 		table.setTaken(true);
@@ -76,8 +104,8 @@ public class ManageModel extends Observable implements Model {
 		notifyAllObservers();
 	}
 
-	public void setRestInfo(LocalTime now, LocalTime time, int i, int j) {
-		restData = new RestData(now, time, i, j);
+	public void setRestInfo(LocalTime now, LocalTime time, int i, int j, int waiting) {
+		restData = new RestData(now, time, i, j, waiting);
 	}
 	
 	public void freeTable(int index, double money) {
@@ -100,5 +128,7 @@ public class ManageModel extends Observable implements Model {
 	public RestData getRestInfo() {
 		return restData;
 	}
+
+	
 
 }
