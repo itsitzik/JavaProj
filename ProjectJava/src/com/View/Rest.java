@@ -4,35 +4,33 @@ import java.awt.Point;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.Controller.PlanController;
 import com.Controller.MannageController;
+import com.Controller.PlanController;
+import com.Model.ManageModel;
+import com.Model.Mode;
 import com.Model.PlanModel;
-import com.Model.MannageModel;
-import com.gui.InitPanel;
-import com.gui.Mode;
-import com.gui.PlanPanel;
-import com.gui.MannagePanel;
 
 public class Rest extends JFrame {
-	
+
+	private static final long serialVersionUID = 1L;
 	private int scrWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private int scrHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-	public InitPanel initPanel;
-	
-	public MannageView mannageView;
+
+	public ManageView manageView;
 	public PlanView planView;
 	public InitView initView;
-	
+
 	public PlanModel planModel;
-	public MannageModel mannageModel;
-	
-	public PlanController planController; 
-	public MannageController mannageController; 
-	
-	private Mode mode;
-	
+	public ManageModel manageModel;
+
+	public PlanController planController;
+	public MannageController manageController;
+
+	private Mode mode; //enum. to specify the working mode (formal, not in use)
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -40,67 +38,75 @@ public class Rest extends JFrame {
 			}
 		});
 	}
-	
-	public Rest(){
 
-		initRest();
-		ApplyInitApp();
-		
+	public Rest() {
+
+		initRest(); //init first load properties
+		ApplyInitApp(); //start application in init mode
+
 	}
-	
+
 	public void initRest() {
 		this.setSize(1000, 660);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
-		this.setLocation(new Point(getScrWidth()/2 - 500, scrHeight/2 - 330));
+		this.setLocation(new Point(scrWidth / 2 - 500, scrHeight / 2 - 330));
 		this.setVisible(true);
-		
+
 		//
 	}
-	
+
 	public void ApplyInitApp() {
 		mode = Mode.INIT;
-		this.getContentPane().removeAll();
+		this.getContentPane().removeAll(); // remove all content of frame before adding new
 		initView = new InitView(this);
 		AddInitListeners();
 		System.out.println("Init Mode Initiated...");
 	}
-	
-	//add listeners to init panel buttons
+
+	// add listeners to init panel buttons
 	private void AddInitListeners() {
 		initView.getManageB().addActionListener(e -> ApplyManageApp());
 		initView.getPlanB().addActionListener(e -> ApplyPlanApp());
 	}
-	
+
 	public void ApplyPlanApp() {
-		mode = Mode.PLAN;
-		this.getContentPane().removeAll();
-		planView = new PlanView(this);
-		planModel = new PlanModel(planView);
-		planController = new PlanController(planModel, planView);
-		AddPlanListeners();
-		System.out.println("Plan Mode Initiated...");
+		if (JOptionPane.showInputDialog("Admin Login").compareTo("admin") == 0) { // check if admin
+			mode = Mode.PLAN;
+			this.getContentPane().removeAll(); // remove all content of frame before adding new
+			//mvc
+			planView = new PlanView(this);
+			planModel = new PlanModel(planView);
+			planController = new PlanController(planModel, planView);
+			//add listener for return button
+			AddPlanListeners();
+			System.out.println("Plan Mode Initiated...");
+		} else {
+			JOptionPane.showMessageDialog(this, "Wrong password!");
+		}
 	}
-	
+
 	private void AddPlanListeners() {
 		planView.getJtool().getRetButton().addActionListener(e -> ApplyInitApp());
 	}
-	
-	public void ApplyManageApp() {
+
+	public void ApplyManageApp() { // start manage application
 		mode = Mode.MANAGE;
-		this.getContentPane().removeAll();
-		mannageView = new MannageView(this);
-		mannageModel = new MannageModel(mannageView);
-		mannageController = new MannageController(mannageModel, mannageView);
+		this.getContentPane().removeAll(); // remove all content of frame before adding new
+		//mvc
+		manageView = new ManageView(this);
+		manageModel = new ManageModel(manageView);
+		manageController = new MannageController(manageModel, manageView);
+		//add listener for return button
 		AddMannageListeners();
 		System.out.println("Manage Mode Initiated...");
 	}
 
 	private void AddMannageListeners() {
-		planView.getJtool().getRetButton().addActionListener(e -> ApplyInitApp());
+		manageView.getJtool().getRetButton().addActionListener(e -> ApplyInitApp());
 	}
-	
+
 	public int getScrWidth() {
 		return scrWidth;
 	}

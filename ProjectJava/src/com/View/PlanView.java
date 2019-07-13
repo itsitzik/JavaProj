@@ -13,11 +13,13 @@ import javax.swing.JPanel;
 
 import com.Model.PaintMode;
 
+import sun.applet.Main;
+
 public class PlanView extends JPanel {
 	
 	private Rest restView;
 	private PlanToolView jtool;
-	private PlanPanelView planPanel;
+	private TablesPanelView planPanel;
 
 	public PlanView(Rest rest) {
 		restView = rest;
@@ -27,7 +29,7 @@ public class PlanView extends JPanel {
 		restView.getContentPane().add(this,BorderLayout.CENTER);
 		setBounds(0, 0, restView.getWidth() , restView.getHeight());
 		
-		planPanel = new PlanPanelView(this);
+		planPanel = new TablesPanelView(this);
 		jtool = new PlanToolView(this);
 		
 		setVisible(true);
@@ -39,10 +41,10 @@ public class PlanView extends JPanel {
 		Cursor c = null;
 		if (paintMode != PaintMode.NOT) {
 			if (paintMode == PaintMode.RECT) {
-				image = toolkit.getImage("resources/rectDraw.jpg");
+				image = toolkit.getImage(Main.class.getResource("/rectDraw.jpg"));
 				c = toolkit.createCustomCursor(image, new Point(getPlanPanel().getX(), getPlanPanel().getY()), "img");
 			} else if (paintMode == PaintMode.CIRCLE) {
-				image = toolkit.getImage("resources/circDraw.jpg");
+				image = toolkit.getImage(Main.class.getResource("/circDraw.jpg"));
 				c = toolkit.createCustomCursor(image, new Point(getPlanPanel().getX(), getPlanPanel().getY()), "img");
 			}else if (paintMode == PaintMode.DELETE) {
 				c = new Cursor(Cursor.CROSSHAIR_CURSOR);
@@ -62,11 +64,11 @@ public class PlanView extends JPanel {
 		this.jtool = jtool;
 	}
 
-	public PlanPanelView getPlanPanel() {
+	public TablesPanelView getPlanPanel() {
 		return planPanel;
 	}
 
-	public void setPlanPanel(PlanPanelView planPanel) {
+	public void setPlanPanel(TablesPanelView planPanel) {
 		this.planPanel = planPanel;
 	}
 	

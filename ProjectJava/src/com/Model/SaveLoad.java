@@ -1,24 +1,18 @@
 package com.Model;
 
-import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
+
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import java.io.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.format.DateTimeFormatter;
+
 
 import com.Model.CircleTable;
 import com.Model.RectTable;
@@ -34,9 +28,10 @@ public class SaveLoad {
 	    return SAVELOAD;
 	  }
 
-	public void SaveRest(List<Table> tables) throws TransformerException {
+	public void SavePreset(List<Table> tables, List<Obstacle> obstacles, String filename) throws TransformerException {
 
 		Element table, tableClass, tablePeople, tableXpos, tableYpos, tableStart, tableEnd, tableSmoke;
+		Element obstacle, obsXpos, obsYpos;
 
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -48,7 +43,7 @@ public class SaveLoad {
 			doc.appendChild(rest);
 
 			for (int i = 0; i < tables.size(); i++) {
-				// supercars element
+
 				table = doc.createElement("Table");
 				rest.appendChild(table);
 
@@ -80,12 +75,25 @@ public class SaveLoad {
 				tableSmoke.appendChild(doc.createTextNode(tables.get(i).isSmoke() + ""));
 				table.appendChild(tableSmoke);
 			}
+			
+			for(int i = 0; i < obstacles.size(); i++) {
+				obstacle = doc.createElement("Obstacle");
+				rest.appendChild(obstacle);
+				
+				obsXpos = doc.createElement("xPos");
+				obsXpos.appendChild(doc.createTextNode(obstacles.get(i).getxPos() + ""));
+				obstacle.appendChild(obsXpos);
+
+				obsYpos = doc.createElement("yPos");
+				obsYpos.appendChild(doc.createTextNode(obstacles.get(i).getyPos() + ""));
+				obstacle.appendChild(obsYpos);
+			}
 
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("./Rest.xml"));
+			StreamResult result = new StreamResult(new File("./" + filename));
 			transformer.transform(source, result);
 
 		} catch (ParserConfigurationException e) {
@@ -93,24 +101,27 @@ public class SaveLoad {
 		}
 	}
 
-	public void LoadRest(List<Table> tables) {
+	public void LoadPreset(List<Table> tables, List<Obstacle> obstacles, String filename) {
 		tables.removeAll(tables);
+		obstacles.removeAll(obstacles);
 		Table table;
-		System.out.println(tables.size());
+		Obstacle obstacle;
+		Node nNode;
+		Element eElement;
 
 		try {
-			File inputFile = new File("./Rest.xml");
+			File inputFile = new File("./" + filename);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
 			doc.getDocumentElement().normalize();
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+			//System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 			NodeList nList = doc.getElementsByTagName("Table");
 
 			for (int i = 0; i < nList.getLength(); i++) {
-				Node nNode = nList.item(i);
+				nNode = nList.item(i);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
+					eElement = (Element) nNode;
 					if (eElement.getElementsByTagName("Class").item(0).getTextContent().toString()
 							.equals(pre + "RectTable")) {
 						RectTable recTable = new RectTable();
@@ -119,7 +130,7 @@ public class SaveLoad {
 						CircleTable cirTable = new CircleTable();
 						table = cirTable;
 					}
-					System.out.println(eElement.getElementsByTagName("People").item(0).getTextContent().toString());
+					//System.out.println(eElement.getElementsByTagName("People").item(0).getTextContent().toString());
 					table.setPeople(eElement.getElementsByTagName("People").item(0).getTextContent().toString());
 					table.setSmoke(eElement.getElementsByTagName("Smoke").item(0).getTextContent().toString());
 					table.setStartTime(eElement.getElementsByTagName("StartTime").item(0).getTextContent().toString());
@@ -130,9 +141,26 @@ public class SaveLoad {
 					tables.add(table);
 				}
 			}
+			
+			nList = doc.getElementsByTagName("Obstacle");
+			
+			for (int i = 0; i < nList.getLength(); i++) {
+				nNode = nList.item(i);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					eElement = (Element) nNode;
+					obstacle = new Obstacle();
+					obstacle.setxPos(eElement.getElementsByTagName("xPos").item(0).getTextContent().toString());
+					obstacle.setyPos(eElement.getElementsByTagName("yPos").item(0).getTextContent().toString());
+					obstacles.add(obstacle);
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void LoadManagePreset(List<Table> tables, String filename) {
+		
 	}
 }

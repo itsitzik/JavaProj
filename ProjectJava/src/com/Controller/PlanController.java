@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 import com.Model.PlanModel;
 import com.Model.TableData;
 import com.Model.PaintMode;
-import com.View.PlanPanelView;
+import com.View.TablesPanelView;
 import com.View.PlanView;
 import com.View.TablePref;
 
@@ -39,6 +39,7 @@ public class PlanController {
 
 		planView.getJtool().getRectBtn().addActionListener(e -> startPainting(PaintMode.RECT));
 		planView.getJtool().getCircleBtn().addActionListener(e -> startPainting(PaintMode.CIRCLE));
+		planView.getJtool().getObsButton().addActionListener(e -> startPainting(PaintMode.OBSTACLE));
 		planView.getJtool().getDeleteBtn().addActionListener(e -> startPainting(PaintMode.DELETE));
 		planView.getJtool().getCancelBtn().addActionListener(e -> endPainting());
 	}
@@ -82,23 +83,30 @@ public class PlanController {
 
 	//Painting functions
 	
-	private void planPanelClicked(MouseEvent e) {
+	private int planPanelClicked(MouseEvent e) {
 		int xPos,yPos;
-		
+		System.out.println(paintMode);
 		if (paintMode != PaintMode.NOT) {
 			xPos = (e.getX() - (e.getX() % 100)) / 100;
 			yPos = (e.getY() - (e.getY() % 100)) / 100;
 			if (paintMode == PaintMode.DELETE) {
-				planModel.deleteTable(xPos, yPos);
+				planModel.deleteCube(xPos, yPos);
+			} else if(paintMode == PaintMode.OBSTACLE) {
+				planModel.addObstacle(xPos, yPos);
 			} else {
-				TablePref prefOfTable = new TablePref();
-				TableData tableData = prefOfTable.getTableData();
+				TableData tableData = getTableData();
 				planModel.addTable(tableData, xPos, yPos, paintMode);
 			}
 			endPainting();
-			return;
+			return 1;
 		}
 		System.out.println("No new Tables Created...");
+		return 0;
+	}
+	
+	private TableData getTableData() {
+		TablePref prefOfTable = new TablePref();
+		return prefOfTable.getTableData();
 	}
 
 	private void startPainting(PaintMode paintMode) {

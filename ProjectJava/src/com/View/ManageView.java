@@ -10,16 +10,18 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
 import com.Model.PaintMode;
 
-public class MannageView extends JPanel {
+public class ManageView extends JPanel {
 	
 	private Rest restView;
-	private MannageToolView jtool;
-	private MannagePanelView mannagePanel;
+	private ManageToolView jtool;
+	private TablesPanelView managePanel;
 
-	public MannageView(Rest rest) {
+	public ManageView(Rest rest) {
 		restView = rest;
 		
 		//mannagePanel = new JPanel(new BorderLayout());
@@ -27,8 +29,8 @@ public class MannageView extends JPanel {
 		restView.getContentPane().add(this,BorderLayout.CENTER);
 		setBounds(0, 0, restView.getWidth() , restView.getHeight());
 		
-		mannagePanel = new MannagePanelView(this);
-		jtool = new MannageToolView(this);
+		managePanel = new TablesPanelView(this);
+		jtool = new ManageToolView(this);
 		
 		setVisible(true);
 	}
@@ -40,10 +42,10 @@ public class MannageView extends JPanel {
 		if (paintMode != PaintMode.NOT) {
 			if (paintMode == PaintMode.RECT) {
 				image = toolkit.getImage("resources/rectDraw.jpg");
-				c = toolkit.createCustomCursor(image, new Point(getMannagePanel().getX(), getMannagePanel().getY()), "img");
+				c = toolkit.createCustomCursor(image, new Point(getManagePanel().getX(), getManagePanel().getY()), "img");
 			} else if (paintMode == PaintMode.CIRCLE) {
 				image = toolkit.getImage("resources/circDraw.jpg");
-				c = toolkit.createCustomCursor(image, new Point(getMannagePanel().getX(), getMannagePanel().getY()), "img");
+				c = toolkit.createCustomCursor(image, new Point(getManagePanel().getX(), getManagePanel().getY()), "img");
 			}else if (paintMode == PaintMode.DELETE) {
 				c = new Cursor(Cursor.CROSSHAIR_CURSOR);
 			}
@@ -51,23 +53,24 @@ public class MannageView extends JPanel {
 		} else {
 			c = new Cursor(Cursor.DEFAULT_CURSOR);
 		}
-		getMannagePanel().setCursor(c);
+		getManagePanel().setCursor(c);
 	}
 
-	public MannageToolView getJtool() {
+	public ManageToolView getJtool() {
 		return jtool;
 	}
 
-	public void setJtool(MannageToolView jtool) {
+	public void setJtool(ManageToolView jtool) {
 		this.jtool = jtool;
 	}
 
-	public MannagePanelView getMannagePanel() {
-		return mannagePanel;
+	public TablesPanelView getManagePanel() {
+		return managePanel;
 	}
 
-	public void setMannagePanel(MannagePanelView mannagePanel) {
-		this.mannagePanel = mannagePanel;
+	public void setManagePanel(TablesPanelView mannagePanel) {
+		this.managePanel = mannagePanel;
 	}
+	
 	
 }

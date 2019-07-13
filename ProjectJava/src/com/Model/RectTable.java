@@ -28,27 +28,10 @@ public class RectTable extends Table {
 		
 	}
 
-	public void printTable(JPanel win) {
-		// = new;
-		Graphics g = win.getGraphics();
-		g.drawRect(getxPos() * size -1, getyPos() * size -1, size, size);
-		g.setColor(Color.RED);
-		g.fillRect(getxPos() * size, getyPos() * size, size -1, size -1);
-		
-		drawTableInfo(g);
-		System.out.println(tableInfo);
-		
-	}
-
-	private void drawTableInfo(Graphics g) {
-		g.setColor(Color.BLACK);
-		int i = 1;
-		g.drawString("people: " + getPeople(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-		g.drawString("smoke?: " + isSmoke(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-		g.drawString("start: " + getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) , getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-		g.drawString("end: " + getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-		g.drawString("taken?: " + getTaken(), getxPos() * size + padding, getyPos() * size + (lnSpace * i++));
-
+	public void printTable(Graphics g, int size, Color color) {
+		g.drawRect(this.getxPos() * size - 1, this.getyPos() * size - 1, size, size);
+		g.setColor(color);
+		g.fillRect(this.getxPos() * size, this.getyPos() * size, size - 1, size - 1);
 	}
 
 }

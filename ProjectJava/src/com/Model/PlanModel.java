@@ -3,7 +3,6 @@ package com.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JOptionPane;
 import javax.xml.transform.TransformerException;
@@ -12,22 +11,32 @@ import com.Model.Table;
 import com.View.PlanView;
 import com.Model.PaintMode;
 
-public class PlanModel extends Observable {
-
-	List<Table> tables = new ArrayList<Table>();
+public class PlanModel extends Model {
 
 	public PlanModel(PlanView planView) {
 		super.addObserver(planView.getPlanPanel());
 	}
 
-	public void notifyAllObservers() {
-		setChanged();
-		super.notifyObservers(tables);
+	public void addObstacle(int xPos, int yPos) {
+		int tableIndex = getTableIndexByXY(xPos, yPos);
+		int obIndex = getObstacleByXY(xPos, yPos);
+		System.out.println(tableIndex + " " + obIndex);
+		if (tableIndex == -1 && obIndex == -1) {
+			Obstacle obs = new Obstacle();
+			obs.setxPos(xPos);
+			obs.setyPos(yPos);
+			obstacles.add(obs);
+		} else {
+			JOptionPane.showMessageDialog(null, "An error occured during painting: This spot is taken");
+		}
+		notifyAllObservers();
+
 	}
 
 	public void addTable(TableData tableData, int xPos, int yPos, PaintMode paintMode) {
 		int tableIndex = getTableIndexByXY(xPos, yPos);
-		if (tableIndex == -1) {
+		int obIndex = getObstacleByXY(xPos, yPos);
+		if (tableIndex == -1 && obIndex == -1) {
 			if (paintMode == PaintMode.RECT) {
 				RectTable rectTable = new RectTable();
 				rectTable.setPeople(tableData.getPeople());
@@ -45,48 +54,42 @@ public class PlanModel extends Observable {
 			} else {
 				JOptionPane.showMessageDialog(null, "An error occured during picking table kind");
 			}
+		} else {
+			JOptionPane.showMessageDialog(null, "An error occured during painting: This spot is taken");
 		}
 		notifyAllObservers();
 	}
 
-	public void deleteTable(int xPos, int yPos) {
+	public void deleteCube(int xPos, int yPos) {
 		int tableIndex = getTableIndexByXY(xPos, yPos);
+		int obsIndex;
 		try {
-			if (tableIndex != -1) 
+			if (tableIndex != -1) {
 				tables.remove(tableIndex);
+			} else {
+				obsIndex = getObstacleByXY(xPos, yPos);
+				if (obsIndex != -1) {
+					obstacles.remove(obsIndex);
+				}
+			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "An error occured during deleting a table");
 		}
 		notifyAllObservers();
 	}
 
-	public int getTableIndexByXY(int xPos, int yPos) {
-		Table table;
-		for (int i = 0; i < tables.size(); i++) {
-			table = tables.get(i);
-			if (table.getxPos() == xPos && table.getyPos() == yPos) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	public List<Table> getTables() {
-		return tables;
-	}
-
 	public void saveModel() {
 		try {
-			SaveLoad.getInstance().SaveRest(tables);
+			SaveLoad.getInstance().SavePreset(tables, obstacles, "Rest.xml");
 			notifyAllObservers();
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void loadModel() {
-		SaveLoad.getInstance().LoadRest(tables);
+		SaveLoad.getInstance().LoadPreset(tables, obstacles, "Rest.xml");
 		notifyAllObservers();
 	}
 
