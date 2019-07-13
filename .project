@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>resources</name>
-			<type>2</type>
-			<location>C:/Users/Owner/git/JavaProjManage/ProjectJava/resources</location>
-		</link>
-	</linkedResources>
 </projectDescription>

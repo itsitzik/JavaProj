@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 
 import com.Model.PaintMode;
 
+import sun.applet.Main;
+
 public class PlanView extends JPanel {
 	
 	private Rest restView;
@@ -39,10 +41,10 @@ public class PlanView extends JPanel {
 		Cursor c = null;
 		if (paintMode != PaintMode.NOT) {
 			if (paintMode == PaintMode.RECT) {
-				image = toolkit.getImage("ProjectJava/resources/rectDraw.jpg");
+				image = toolkit.getImage(Main.class.getResource("/rectDraw.jpg"));
 				c = toolkit.createCustomCursor(image, new Point(getPlanPanel().getX(), getPlanPanel().getY()), "img");
 			} else if (paintMode == PaintMode.CIRCLE) {
-				image = toolkit.getImage("ProjectJava/resources/circDraw.jpg");
+				image = toolkit.getImage(Main.class.getResource("/circDraw.jpg"));
 				c = toolkit.createCustomCursor(image, new Point(getPlanPanel().getX(), getPlanPanel().getY()), "img");
 			}else if (paintMode == PaintMode.DELETE) {
 				c = new Cursor(Cursor.CROSSHAIR_CURSOR);
