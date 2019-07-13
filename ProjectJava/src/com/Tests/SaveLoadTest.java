@@ -1,4 +1,4 @@
-package com.Model;
+package com.Tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -18,6 +18,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import com.Model.CircleTable;
+import com.Model.Obstacle;
+import com.Model.SaveLoad;
+import com.Model.Table;
 
 public class SaveLoadTest extends SaveLoad {
 	

@@ -1,4 +1,4 @@
-package com.Model;
+package com.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import com.Model.CircleTable;
+import com.Model.Model;
+import com.Model.Table;
 
 class ModelTest extends Model {
 
@@ -24,7 +28,7 @@ class ModelTest extends Model {
 		int num = 4;
 		for(int i = 0;i<num;i++) {
 			table = new CircleTable(i,i);
-			tables.add(table);
+			getTables().add(table);
 		}
 		
 		for(int i = 0;i<10;i++) {

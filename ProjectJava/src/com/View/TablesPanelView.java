@@ -19,12 +19,14 @@ import javax.swing.Timer;
 
 import com.Model.Model;
 import com.Model.Obstacle;
-import com.Model.PaintMode;
 import com.Model.Table;
-import com.View.PlanView;
 
 public class TablesPanelView extends JPanel implements Observer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final int size = 100;
 	private final int lnSpace = 15;
 	private final int padding = 5;
@@ -91,20 +93,12 @@ public class TablesPanelView extends JPanel implements Observer {
 
 	public void printTable(Table table, Graphics g) {
 
-		PaintMode tableToPaint = table.getTableKind();
 		int timeToFree = (int) MINUTES.between(LocalTime.now(), table.getEndTime());
 		Color color = table.getTaken() ? (timeToFree <= 0 ? Color.ORANGE: Color.RED) : Color.GREEN; // change to 0
 
-
-		if (tableToPaint == PaintMode.RECT) {
-			g.drawRect(table.getxPos() * size - 1, table.getyPos() * size - 1, size, size);
-			g.setColor(color);
-			g.fillRect(table.getxPos() * size, table.getyPos() * size, size - 1, size - 1);
-		} else if (tableToPaint == PaintMode.CIRCLE) {
-			g.drawOval(table.getxPos() * size - 1, table.getyPos() * size - 1, size, size);
-			g.setColor(color);
-			g.fillOval(table.getxPos() * size, table.getyPos() * size, size - 1, size - 1);
-		}
+		
+		table.printTable(g, size, color); // polymorpishm of function to print the circle or rectangle
+		
 		g.setColor(Color.BLACK);
 		int i = 1;
 		g.drawString("people: " + table.getPeople(), table.getxPos() * size + padding,

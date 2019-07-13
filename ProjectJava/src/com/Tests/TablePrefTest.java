@@ -1,8 +1,10 @@
-package com.View;
+package com.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import com.View.TablePref;
 
 class TablePrefTest extends TablePref {
 

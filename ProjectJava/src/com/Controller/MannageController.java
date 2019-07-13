@@ -1,11 +1,5 @@
 package com.Controller;
 
-import java.awt.Cursor;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -13,18 +7,12 @@ import java.time.LocalTime;
 
 import javax.swing.JOptionPane;
 
-import com.Model.ManageModel;
-import com.Model.TableData;
-import com.Model.TimePicker;
 import com.Model.ManageMode;
-import com.Model.PaintMode;
-import com.Model.RestData;
-import com.Model.Table;
-import com.View.ManagePanelView;
+import com.Model.ManageModel;
+import com.Model.TimePicker;
 import com.View.ManageView;
 import com.View.RestInfo;
 import com.View.TableFree;
-import com.View.TablePref;
 
 public class MannageController {
 
@@ -142,14 +130,8 @@ public class MannageController {
 		}
 	}
 
-	private void saveRest() {
-		System.out.println("N/A");
-//		mannageModel.saveModel();
-	}
 
 	private void mannagePanelClicked(MouseEvent e) {
-		System.out.println("N/A");
-
 		int xPos, yPos;
 		xPos = (e.getX() - (e.getX() % 100)) / 100;
 		yPos = (e.getY() - (e.getY() % 100)) / 100;

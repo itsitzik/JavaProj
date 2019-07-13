@@ -5,18 +5,17 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.Controller.PlanController;
 import com.Controller.MannageController;
-import com.Model.PlanModel;
+import com.Controller.PlanController;
 import com.Model.ManageModel;
 import com.Model.Mode;
+import com.Model.PlanModel;
 
 public class Rest extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private int scrWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private int scrHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 
@@ -30,7 +29,7 @@ public class Rest extends JFrame {
 	public PlanController planController;
 	public MannageController manageController;
 
-	private Mode mode;
+	private Mode mode; //enum. to specify the working mode (formal, not in use)
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -42,8 +41,8 @@ public class Rest extends JFrame {
 
 	public Rest() {
 
-		initRest();
-		ApplyInitApp();
+		initRest(); //init first load properties
+		ApplyInitApp(); //start application in init mode
 
 	}
 
@@ -52,7 +51,7 @@ public class Rest extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		this.setResizable(false);
-		this.setLocation(new Point(getScrWidth() / 2 - 500, scrHeight / 2 - 330));
+		this.setLocation(new Point(scrWidth / 2 - 500, scrHeight / 2 - 330));
 		this.setVisible(true);
 
 		//
@@ -60,7 +59,7 @@ public class Rest extends JFrame {
 
 	public void ApplyInitApp() {
 		mode = Mode.INIT;
-		this.getContentPane().removeAll();
+		this.getContentPane().removeAll(); // remove all content of frame before adding new
 		initView = new InitView(this);
 		AddInitListeners();
 		System.out.println("Init Mode Initiated...");
@@ -73,12 +72,14 @@ public class Rest extends JFrame {
 	}
 
 	public void ApplyPlanApp() {
-		if (JOptionPane.showInputDialog("Admin Login").compareTo("admin") == 0) {
+		if (JOptionPane.showInputDialog("Admin Login").compareTo("admin") == 0) { // check if admin
 			mode = Mode.PLAN;
-			this.getContentPane().removeAll();
+			this.getContentPane().removeAll(); // remove all content of frame before adding new
+			//mvc
 			planView = new PlanView(this);
 			planModel = new PlanModel(planView);
 			planController = new PlanController(planModel, planView);
+			//add listener for return button
 			AddPlanListeners();
 			System.out.println("Plan Mode Initiated...");
 		} else {
@@ -90,12 +91,14 @@ public class Rest extends JFrame {
 		planView.getJtool().getRetButton().addActionListener(e -> ApplyInitApp());
 	}
 
-	public void ApplyManageApp() {
+	public void ApplyManageApp() { // start manage application
 		mode = Mode.MANAGE;
-		this.getContentPane().removeAll();
+		this.getContentPane().removeAll(); // remove all content of frame before adding new
+		//mvc
 		manageView = new ManageView(this);
 		manageModel = new ManageModel(manageView);
 		manageController = new MannageController(manageModel, manageView);
+		//add listener for return button
 		AddMannageListeners();
 		System.out.println("Manage Mode Initiated...");
 	}
@@ -110,11 +113,5 @@ public class Rest extends JFrame {
 
 	public void setScrWidth(int scrWidth) {
 		this.scrWidth = scrWidth;
-	}
-
-	private JTextField loginPanel() {
-		JTextField text = new JTextField();
-
-		return text;
 	}
 }

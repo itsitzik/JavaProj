@@ -1,10 +1,8 @@
 package com.Model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.time.LocalTime;
-import java.util.Date;
-
-import javax.swing.JPanel;
 
 public abstract class Table extends Obstacle {
 	private int people;
@@ -23,7 +21,7 @@ public abstract class Table extends Obstacle {
 		this.setyPos(yPos);
 	}
 
-	public abstract void printTable(JPanel win);
+	public abstract void printTable(Graphics g, int cubeSize, Color color);
 	public abstract PaintMode getTableKind();
 
 	public int getPeople() {
