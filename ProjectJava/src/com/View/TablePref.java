@@ -20,8 +20,6 @@ public class TablePref /*extends JFrame*/ {
 	
 	TableData tableData;
 	private JPanel mainPanel;
-	private int scrWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-	private int scrHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 	
 	JTextField people;
 	JComboBox<Boolean> smk;
@@ -63,17 +61,35 @@ public class TablePref /*extends JFrame*/ {
 	}
 	
 	public TableData getTableData() {
+
 		for(;;) {
 			JOptionPane.showMessageDialog(null,mainPanel,"Table Data",JOptionPane.INFORMATION_MESSAGE);
 			try {
 				tableData = new TableData();
-				tableData.setPeople(Integer.parseInt(people.getText()));
-				tableData.setSmk(Boolean.parseBoolean(smk.getSelectedItem().toString()));
-				break;
+				if(ValidateData(smk.getSelectedItem().toString(),people.getText())){ //validate user input
+					tableData.setPeople(Integer.parseInt(people.getText()));
+					tableData.setSmk(Boolean.parseBoolean(smk.getSelectedItem().toString()));
+					break;
+				} else {
+					JOptionPane.showMessageDialog(null, "Enter Valid Information");
+				}
 			} catch(Exception e) {
 				JOptionPane.showMessageDialog(null, "Enter Valid Information");
 			}
 		}
 		return tableData;
+	}
+	
+	protected Boolean ValidateData(String smk, String people) {
+		int p;
+		Boolean smoke;
+		try {
+			p = Integer.parseInt(people);
+			smoke = Boolean.parseBoolean(smk);
+			if(p <= 0) return false;
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 }

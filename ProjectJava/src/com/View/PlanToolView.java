@@ -5,7 +5,7 @@ import javax.swing.JButton;
 public class PlanToolView extends ToolView {
 	
 	PlanView planView;
-	JButton rectBtn, circleBtn, deleteBtn, cancelBtn, saveButton, loadButton, retButton;
+	JButton rectBtn, circleBtn, deleteBtn, cancelBtn, saveButton, loadButton, retButton, obsButton;
 	
 	public PlanToolView(PlanView planView) {
 		super(planView);
@@ -23,6 +23,8 @@ public class PlanToolView extends ToolView {
 		rectBtn = addButton("Rect Table");
 		// add circle table
 		circleBtn = addButton("Circle Table");
+		//OBSTACLE
+		obsButton = addButton("Add Obstacle");
 		// DELETE table
 		deleteBtn = addButton("Delete Table");
 		//CANCEL PAINTING BTN
@@ -93,6 +95,18 @@ public class PlanToolView extends ToolView {
 
 	public void setLoadButton(JButton loadButton) {
 		this.loadButton = loadButton;
+	}
+
+
+
+	public JButton getObsButton() {
+		return obsButton;
+	}
+
+
+
+	public void setObsButton(JButton obsButton) {
+		this.obsButton = obsButton;
 	}
 	
 }

@@ -18,6 +18,10 @@ public class CircleTable extends Table {
 		super(0,false, LocalTime.now(), LocalTime.now(), false, 0, 0);
 	}
 	
+	public CircleTable(int x, int y){
+		super(0,false, LocalTime.now(), LocalTime.now(), false, x, y);
+	}
+	
 	@Override
 	public PaintMode getTableKind() {
 		return PaintMode.CIRCLE;

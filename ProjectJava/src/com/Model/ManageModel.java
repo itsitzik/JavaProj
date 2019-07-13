@@ -13,11 +13,10 @@ import com.View.ManageView;
 
 
 
-public class ManageModel extends Observable implements Model {
+public class ManageModel extends Model {
 
 	RestData restData;
-	List<Table> tables = new ArrayList<Table>();
-	List<Obstacle> obstacles = new ArrayList<Obstacle>();
+	
 	List<Integer> waiting = new ArrayList<Integer>();
 
 	public ManageModel(ManageView manageView) {
@@ -28,29 +27,16 @@ public class ManageModel extends Observable implements Model {
 		int tableInd = getTableIndexByXY(xPos, yPos);
 		tables.get(tableInd).setTaken(true);
 	}
-	
-	public int getTableIndexByXY(int xPos, int yPos) {
-		Table table;
-		for (int i = 0; i < tables.size(); i++) {
-			table = tables.get(i);
-			if (table.getxPos() == xPos && table.getyPos() == yPos) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	public List<Table> getTables() {
-		return tables;
-	}
-
-	public void notifyAllObservers() {
-		setChanged();
-		super.notifyObservers(tables);
-	}
 
 	public void saveModel() {
 		// TODO Auto-generated method stub
+	}
+	
+	public void cleanModel() {
+		waiting.removeAll(waiting);
+		obstacles.removeAll(obstacles);
+		tables.removeAll(tables);
+		notifyAllObservers();
 	}
 
 	public void loadModel() {

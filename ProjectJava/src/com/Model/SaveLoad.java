@@ -28,7 +28,7 @@ public class SaveLoad {
 	    return SAVELOAD;
 	  }
 
-	public void SavePreset(List<Table> tables, String filename) throws TransformerException {
+	public void SavePreset(List<Table> tables, List<Obstacle> obstacles, String filename) throws TransformerException {
 
 		Element table, tableClass, tablePeople, tableXpos, tableYpos, tableStart, tableEnd, tableSmoke;
 		Element obstacle, obsXpos, obsYpos;
@@ -74,6 +74,19 @@ public class SaveLoad {
 				tableSmoke = doc.createElement("Smoke");
 				tableSmoke.appendChild(doc.createTextNode(tables.get(i).isSmoke() + ""));
 				table.appendChild(tableSmoke);
+			}
+			
+			for(int i = 0; i < obstacles.size(); i++) {
+				obstacle = doc.createElement("Obstacle");
+				rest.appendChild(obstacle);
+				
+				obsXpos = doc.createElement("xPos");
+				obsXpos.appendChild(doc.createTextNode(obstacles.get(i).getxPos() + ""));
+				obstacle.appendChild(obsXpos);
+
+				obsYpos = doc.createElement("yPos");
+				obsYpos.appendChild(doc.createTextNode(obstacles.get(i).getyPos() + ""));
+				obstacle.appendChild(obsYpos);
 			}
 
 			// write the content into xml file
@@ -138,6 +151,7 @@ public class SaveLoad {
 					obstacle = new Obstacle();
 					obstacle.setxPos(eElement.getElementsByTagName("xPos").item(0).getTextContent().toString());
 					obstacle.setyPos(eElement.getElementsByTagName("yPos").item(0).getTextContent().toString());
+					obstacles.add(obstacle);
 				}
 			}
 		} catch (Exception e) {

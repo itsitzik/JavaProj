@@ -17,6 +17,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import com.Model.Model;
 import com.Model.Obstacle;
 import com.Model.PaintMode;
 import com.Model.Table;
@@ -65,8 +66,9 @@ public class TablesPanelView extends JPanel implements Observer {
 
 	private void drawObstacles(Graphics g) {
 		g.setColor(Color.DARK_GRAY);
+		System.out.println(obstacles.size());
 		for (int i = 0; i < obstacles.size(); i++) {
-			g.drawRect(obstacles.get(i).getxPos() * size - 1, obstacles.get(i).getyPos() * size - 1, size, size);
+			g.fillRect(obstacles.get(i).getxPos() * size - 1, obstacles.get(i).getyPos() * size - 1, size, size);
 		}
 		
 	}
@@ -118,10 +120,10 @@ public class TablesPanelView extends JPanel implements Observer {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void update(Observable planModel, Object tables) {
-		this.tables = (List<Table>) tables;
+	public void update(Observable planModel, Object model) {
+		this.tables = (List<Table>) ((Model) model).getTables();
+		this.obstacles = (List<Obstacle>) ((Model) model).getObstacles();
 		repaint();
 	}
 	

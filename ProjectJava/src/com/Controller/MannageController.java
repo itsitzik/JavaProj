@@ -138,7 +138,7 @@ public class MannageController {
 		if (n == JOptionPane.YES_OPTION) {
 			manageMode = ManageMode.CLOSE;
 			manageView.getJtool().closeButtonsState();
-			// StartCloseSequence();
+			manageModel.cleanModel();
 		}
 	}
 

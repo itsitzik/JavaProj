@@ -141,6 +141,11 @@ public class FindTable extends JFrame {
 		filter.setBounds(180,i,140,25);
 		i+=35;
 		
+		JLabel label3 = new JLabel("|table id:     |seats:        |smoke:       |free time:");
+		label3.setFont(new Font("arial", Font.PLAIN, 14));  
+		mainPanel.add(label3);
+		label3.setBounds(20, i, 300, 20);
+		i+=20;
 		
 		list = new JTable();
 		mainPanel.add(list);
